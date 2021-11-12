@@ -1,6 +1,7 @@
 """TiTiler Router factories."""
 
 import abc
+import os
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode, urlparse
@@ -126,6 +127,9 @@ class BaseTilerFactory(metaclass=abc.ABCMeta):
         base_url = str(request.base_url)
         if self.router_prefix:
             base_url += self.router_prefix.lstrip("/")
+        if os.getenv("SECURE"):
+            base_url = base_url.replace("http://","https://")
+        print(f"Base URL: {base_url}")
         return url_path.make_absolute_url(base_url=base_url)
 
 
@@ -1163,6 +1167,9 @@ class TMSFactory:
         base_url = str(request.base_url)
         if self.router_prefix:
             base_url += self.router_prefix.lstrip("/")
+        if os.getenv("SECURE"):
+            base_url = base_url.replace("http://","https://")
+        print(f"Base URL: {base_url}")
         return url_path.make_absolute_url(base_url=base_url)
 
     def register_routes(self):
